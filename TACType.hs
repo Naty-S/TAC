@@ -19,4 +19,21 @@ data ThreeAddressCode = ThreeAddressCode
 data Operand a = Variable a | Constant a
 
 
-data Operation = Add | Mul -- | 
+data Operation =
+  Suma            |
+  Resta           |
+  Multiplicacion  |
+  Division        |
+  DivisionEntera  |
+  Y               |
+  O               |
+  Modulo          |
+  Mayor           |
+  MayorQue        |
+  Menor           |
+  MenorQue        |
+  Igual           |
+  NoIgual         |
+  Concatenacion   |
+  AnexoConcat
+  deriving (Eq)
