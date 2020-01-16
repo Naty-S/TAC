@@ -1,23 +1,17 @@
 module TACType where
 
-
-
-
-
-class SymEntryCompatible where
+class SymEntryCompatible a where
   getSymID :: a -> String
 
 
-data ThreeAddressCode = ThreeAddressCode
+data (SymEntryCompatible a) => ThreeAddressCode a b = ThreeAddressCode
   { tacOperand :: Operation,
-    tacLvalue  :: Maybe Operand,
-    tacRvalue1 :: Maybe Operand,
-    tacRvalue2 :: Maybe Operand
+    tacLvalue  :: Maybe (Operand a b),
+    tacRvalue1 :: Maybe (Operand a b),
+    tacRvalue2 :: Maybe (Operand a b)
   }
 
-
-data Operand a = Variable a | Constant a
-
+data (SymEntryCompatible a) => Operand a b = Variable a | Constant b
 
 data Operation =
   Suma            |
