@@ -12,99 +12,108 @@ data (SymEntryCompatible a) => ThreeAddressCode a b = ThreeAddressCode
   deriving (Eq)
 
 instance (SymEntryCompatible a, Show a, Show b) => Show (ThreeAddressCode a b) where
-  show (ThreeAddressCode Assign (Just x) (Just y) _)          = show x ++ " = " ++ show y
-  show (ThreeAddressCode Add (Just x) (Just y) (Just z))      = show x ++ " = " ++ show y ++ " + " ++ show z
-  show (ThreeAddressCode Minus (Just x) (Just y) Nothing)     = show x ++ " = -" ++ show y 
-  show (ThreeAddressCode Sub (Just x) (Just y) (Just z))      = show x ++ " = " ++ show y ++ " - " ++ show z
-  show (ThreeAddressCode Mult (Just x) (Just y) (Just z))     = show x ++ " = " ++ show y ++ " * " ++ show z
-  show (ThreeAddressCode Div (Just x) (Just y) (Just z))      = show x ++ " = " ++ show y ++ " / " ++ show z
-  show (ThreeAddressCode (Cast _ toType) (Just x) (Just y) _) = show x ++ " = " ++ toType ++ "(" ++ show y ++ ")"
-  show (ThreeAddressCode Not (Just x) (Just y) _)             = show x ++ " = ~" ++ show y
-  show (ThreeAddressCode And (Just x) (Just y) (Just z))      = show x ++ " = " ++ show y ++ " && " ++ show z
-  show (ThreeAddressCode Or (Just x) (Just y) (Just z))       = show x ++ " = " ++ show y ++ " || " ++ show z
+  show (ThreeAddressCode Assign (Just x) (Just y) _)          = show x ++ " := " ++ show y
+  show (ThreeAddressCode Add (Just x) (Just y) (Just z))      = show x ++ " := " ++ show y ++ " + " ++ show z
+  show (ThreeAddressCode Minus (Just x) (Just y) Nothing)     = show x ++ " := -" ++ show y 
+  show (ThreeAddressCode Sub (Just x) (Just y) (Just z))      = show x ++ " := " ++ show y ++ " - " ++ show z
+  show (ThreeAddressCode Mult (Just x) (Just y) (Just z))     = show x ++ " := " ++ show y ++ " * " ++ show z
+  show (ThreeAddressCode Div (Just x) (Just y) (Just z))      = show x ++ " := " ++ show y ++ " / " ++ show z
+  show (ThreeAddressCode Mod (Just x) (Just y) (Just z))      = show x ++ " := " ++ show y ++ " % " ++ show z
+  show (ThreeAddressCode (Cast _ toType) (Just x) (Just y) _) = show x ++ " := " ++ toType ++ "(" ++ show y ++ ")"
+  show (ThreeAddressCode Not (Just x) (Just y) _)             = show x ++ " := ~" ++ show y
+  show (ThreeAddressCode And (Just x) (Just y) (Just z))      = show x ++ " := " ++ show y ++ " && " ++ show z
+  show (ThreeAddressCode Or (Just x) (Just y) (Just z))       = show x ++ " := " ++ show y ++ " || " ++ show z
   show (ThreeAddressCode GoTo Nothing Nothing (Just label))   = "goto " ++ show label
   show (ThreeAddressCode GoTo Nothing Nothing Nothing)        = "goto __"
   show (ThreeAddressCode If Nothing (Just b) (Just label))    = "if " ++ show b ++ " then goto " ++ show label
   show (ThreeAddressCode If Nothing (Just b) Nothing)         = "if " ++ show b ++ " then goto __"
 
-  show tac = show (tacLvalue tac) ++ " = " ++ show (tacRvalue1 tac) ++ " (?) " ++ show (tacRvalue2 tac)
+  show tac = show (tacLvalue tac) ++ " := " ++ show (tacRvalue1 tac) ++ " (?) " ++ show (tacRvalue2 tac)
+
 
 data (SymEntryCompatible a) => Operand a b = 
-  Variable a | 
+  Variable a           | 
   Constant (String, b) | 
   Label Int
   deriving (Eq)
 
+
 instance (SymEntryCompatible a, Show a, Show b) => Show (Operand a b) where
   show (Variable x) = show x
   show (Constant c) = fst c
-  show (Label l) = show l
+  show (Label l)    = show l
+
 
 data Operation =
-    Assign        |
+    Assign            |
     -- Arithmetic
     -- | Addition
-    Add            |
+    Add               |
     -- | Substraction
-    Sub           |
+    Sub               |
     -- | Unary minus
-    Minus           |
+    Minus             |
     -- | Multiplication
-    Mult          |
+    Mult              |
     -- | Division
-    Div           |
+    Div               |
     -- | Modulus
-    Mod          |
+    Mod               |
 
     -- Logical
     -- | Logical and
     And               |
     -- | Logical or
-    Or               |
+    Or                |
     -- | Logical not
-    Not             |
+    Not               |
 
     -- Comparators
     -- | Greater than
-    Gt           |
+    Gt                |
     -- | Greater than or equal
-    Gte        |
+    Gte               |
     -- | Less than
-    Lt           |
+    Lt                |
     -- | Less than or equal
-    Lte        |
+    Lte               |
     -- | Equal
-    Eq           |
+    Eq                |
     -- | Not equal
-    Neq         |
+    Neq               |
 
     -- Jumping
     -- | goto <label>
-    GoTo        |
+    GoTo              |
     -- | if <var> goto <label>
-    If          |
+    If                |
     -- | if ~<var> goto <label>
-    IfFalse     |
+    IfFalse           |
     -- | New label
-    NewLabel       |
+    NewLabel          |
 
     -- Calling functions
     -- | Define a parameter
-    Param       |
+    Param             |
     -- | Call function
-    Call        |
+    Call              |
 
     -- Array operators
     -- | x=y[i]
-    Get         |
+    Get               |
     -- | x[i]=y
-    Set         |
+    Set               |
+    -- | x:= 5:y
+    Anexo             |
+    -- | x:= y::z
+    Concat            |
 
     -- Pointer operations
     -- | x=&y
-    Ref         |
+    Ref               |
     -- | x=*y
-    Deref       |
+    Deref             |
 
     Cast String String
+
     deriving (Eq, Show)
