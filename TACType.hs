@@ -3,7 +3,7 @@ module TACType where
 class SymEntryCompatible a where
   getSymID :: a -> String
 
-data (SymEntryCompatible a) => ThreeAddressCode a b = ThreeAddressCode
+data (SymEntryCompatible a) => ThreeAddressCode a b = TACC
   { tacOperand :: Operation,
     tacLvalue  :: Maybe (Operand a b),
     tacRvalue1 :: Maybe (Operand a b),
@@ -12,22 +12,28 @@ data (SymEntryCompatible a) => ThreeAddressCode a b = ThreeAddressCode
   deriving (Eq)
 
 instance (SymEntryCompatible a, Show a, Show b) => Show (ThreeAddressCode a b) where
-  show (ThreeAddressCode Assign (Just x) (Just y) _)          = show x ++ " := " ++ show y
-  show (ThreeAddressCode Add (Just x) (Just y) (Just z))      = show x ++ " := " ++ show y ++ " + " ++ show z
-  show (ThreeAddressCode Minus (Just x) (Just y) Nothing)     = show x ++ " := -" ++ show y 
-  show (ThreeAddressCode Sub (Just x) (Just y) (Just z))      = show x ++ " := " ++ show y ++ " - " ++ show z
-  show (ThreeAddressCode Mult (Just x) (Just y) (Just z))     = show x ++ " := " ++ show y ++ " * " ++ show z
-  show (ThreeAddressCode Div (Just x) (Just y) (Just z))      = show x ++ " := " ++ show y ++ " / " ++ show z
-  show (ThreeAddressCode Mod (Just x) (Just y) (Just z))      = show x ++ " := " ++ show y ++ " % " ++ show z
-  show (ThreeAddressCode (Cast _ toType) (Just x) (Just y) _) = show x ++ " := " ++ toType ++ "(" ++ show y ++ ")"
-  show (ThreeAddressCode Not (Just x) (Just y) _)             = show x ++ " := ~" ++ show y
-  show (ThreeAddressCode And (Just x) (Just y) (Just z))      = show x ++ " := " ++ show y ++ " && " ++ show z
-  show (ThreeAddressCode Or (Just x) (Just y) (Just z))       = show x ++ " := " ++ show y ++ " || " ++ show z
-  show (ThreeAddressCode GoTo Nothing Nothing (Just label))   = "goto " ++ show label
-  show (ThreeAddressCode GoTo Nothing Nothing Nothing)        = "goto __"
-  show (ThreeAddressCode If Nothing (Just b) (Just label))    = "if " ++ show b ++ " then goto " ++ show label
-  show (ThreeAddressCode If Nothing (Just b) Nothing)         = "if " ++ show b ++ " then goto __"
-
+  show (TACC Assign (Just x) (Just y) _)          = show x ++ " := " ++ show y
+  show (TACC Add (Just x) (Just y) (Just z))      = show x ++ " := " ++ show y ++ " + " ++ show z
+  show (TACC Minus (Just x) (Just y) Nothing)     = show x ++ " := -" ++ show y 
+  show (TACC Sub (Just x) (Just y) (Just z))      = show x ++ " := " ++ show y ++ " - " ++ show z
+  show (TACC Mult (Just x) (Just y) (Just z))     = show x ++ " := " ++ show y ++ " * " ++ show z
+  show (TACC Div (Just x) (Just y) (Just z))      = show x ++ " := " ++ show y ++ " / " ++ show z
+  show (TACC Mod (Just x) (Just y) (Just z))      = show x ++ " := " ++ show y ++ " % " ++ show z
+  show (TACC (Cast _ toType) (Just x) (Just y) _) = show x ++ " := " ++ toType ++ "(" ++ show y ++ ")"
+  show (TACC Not (Just x) (Just y) _)             = show x ++ " := ~" ++ show y
+  show (TACC And (Just x) (Just y) (Just z))      = show x ++ " := " ++ show y ++ " && " ++ show z
+  show (TACC Or (Just x) (Just y) (Just z))       = show x ++ " := " ++ show y ++ " || " ++ show z
+  show (TACC GoTo Nothing Nothing (Just label))   = "goto " ++ show label
+  show (TACC GoTo Nothing Nothing Nothing)        = "goto __"
+  show (TACC If Nothing (Just b) (Just label))    = "if " ++ show b ++ " then goto " ++ show label
+  show (TACC If Nothing (Just b) Nothing)         = "if " ++ show b ++ " then goto __"
+  show (TACC Eq (Just x) (Just y) (Just label))   = "if " ++ show x ++ " = " ++ show y ++ " then goto " ++ show label
+  show (TACC Neq (Just x) (Just y) (Just label))   = "if " ++ show x ++ " != " ++ show y ++ " then goto " ++ show label
+  show (TACC Lt (Just x) (Just y) (Just label))   = "if " ++ show x ++ " < " ++ show y ++ " then goto " ++ show label
+  show (TACC Gt (Just x) (Just y) (Just label))   = "if " ++ show x ++ " > " ++ show y ++ " then goto " ++ show label
+  show (TACC Lte (Just x) (Just y) (Just label))   = "if " ++ show x ++ " <= " ++ show y ++ " then goto " ++ show label
+  show (TACC Gte (Just x) (Just y) (Just label))   = "if " ++ show x ++ " >= " ++ show y ++ " then goto " ++ show label
+  show (TACC NewLabel Nothing (Just label) Nothing)   = show label ++ ":"
   show tac = show (tacLvalue tac) ++ " := " ++ show (tacRvalue1 tac) ++ " (?) " ++ show (tacRvalue2 tac)
 
 
