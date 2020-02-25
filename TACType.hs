@@ -41,8 +41,10 @@ instance (SymEntryCompatible a, Show a, Show b) => Show (ThreeAddressCode a b) w
   show (ThreeAddressCode Param Nothing (Just p) Nothing)          = "\tparam " ++ show p
   show (ThreeAddressCode Call Nothing (Just l) (Just n))          = "\tcall " ++ show l ++ ", " ++ show n
   show (ThreeAddressCode Call (Just t) (Just l) (Just n))         = "\t" ++ show t ++ " := call " ++ show l ++ ", " ++ show n
+  show (ThreeAddressCode Read Nothing (Just e) Nothing)           = "\t read " ++ show e
+  show (ThreeAddressCode Print Nothing (Just e) Nothing)          = "\t print " ++ show e
   show (ThreeAddressCode Return Nothing Nothing Nothing)          = "\treturn" 
-  show (ThreeAddressCode Return Nothing (Just t) Nothing)          = "\treturn " ++ show t 
+  show (ThreeAddressCode Return Nothing (Just t) Nothing)         = "\treturn " ++ show t 
 
   show tac = show (tacLvalue tac) ++ " := " ++ show (tacRvalue1 tac) ++ show (tacOperand tac) ++ show (tacRvalue2 tac)
 
@@ -132,6 +134,12 @@ data Operation =
     New         |
     -- | free(x)
     Free        |
+    
+    -- Input/Output
+    -- | read x
+    Read        |
+    -- | print x
+    Print       |
 
     Cast String String
     deriving (Eq, Show)
