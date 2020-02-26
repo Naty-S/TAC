@@ -18,6 +18,7 @@ instance (SymEntryCompatible a, Show a, Show b) => Show (ThreeAddressCode a b) w
   show (ThreeAddressCode Sub (Just x) (Just y) (Just z))          = "\t" ++ show x ++ " := " ++ show y ++ " - " ++ show z
   show (ThreeAddressCode Mult (Just x) (Just y) (Just z))         = "\t" ++ show x ++ " := " ++ show y ++ " * " ++ show z
   show (ThreeAddressCode Div (Just x) (Just y) (Just z))          = "\t" ++ show x ++ " := " ++ show y ++ " / " ++ show z
+  show (ThreeAddressCode Mod (Just x) (Just y) (Just z))          = "\t" ++ show x ++ " := " ++ show y ++ " % " ++ show z
   show (ThreeAddressCode (Cast _ toType) (Just x) (Just y) _)     = "\t" ++ show x ++ " := " ++ toType ++ "(" ++ show y ++ ")"
   show (ThreeAddressCode Not (Just x) (Just y) _)                 = "\t" ++ show x ++ " := ~" ++ show y
   show (ThreeAddressCode And (Just x) (Just y) (Just z))          = "\t" ++ show x ++ " := " ++ show y ++ " && " ++ show z
@@ -41,8 +42,8 @@ instance (SymEntryCompatible a, Show a, Show b) => Show (ThreeAddressCode a b) w
   show (ThreeAddressCode Param Nothing (Just p) Nothing)          = "\tparam " ++ show p
   show (ThreeAddressCode Call Nothing (Just l) (Just n))          = "\tcall " ++ show l ++ ", " ++ show n
   show (ThreeAddressCode Call (Just t) (Just l) (Just n))         = "\t" ++ show t ++ " := call " ++ show l ++ ", " ++ show n
-  show (ThreeAddressCode Read Nothing (Just e) Nothing)           = "\t read " ++ show e
-  show (ThreeAddressCode Print Nothing (Just e) Nothing)          = "\t print " ++ show e
+  show (ThreeAddressCode Read Nothing (Just e) Nothing)           = "\tread " ++ show e
+  show (ThreeAddressCode Print Nothing (Just e) Nothing)          = "\tprint " ++ show e
   show (ThreeAddressCode Return Nothing Nothing Nothing)          = "\treturn"
   show (ThreeAddressCode Return Nothing (Just t) Nothing)         = "\treturn " ++ show t
   show (ThreeAddressCode Exit Nothing Nothing Nothing)            = "\texit"
