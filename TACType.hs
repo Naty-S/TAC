@@ -1,4 +1,4 @@
-module Playit.BackEnd.TACType where
+module TACType where
 
 
 class SymEntryCompatible a where
@@ -60,11 +60,11 @@ instance (SymEntryCompatible a, Show a, Show b) => Show (ThreeAddressCode a b) w
 -- Access for records and unions
   show (TACC Access (Just x) (Just r) (Just f)) = "\t" ++ show x ++ " := " ++ show r ++ "." ++ show f
 -- Input/Output
-  show (ThreeAddressCode Read Nothing (Just e) Nothing)  = "\tread " ++ show e
-  show (ThreeAddressCode Print Nothing (Just e) Nothing) = "\tprint " ++ show e
+  show (TACC Read Nothing (Just e) Nothing)  = "\tread " ++ show e
+  show (TACC Print Nothing (Just e) Nothing) = "\tprint " ++ show e
 -- Exit program
-  show (ThreeAddressCode Exit Nothing Nothing Nothing)   = "\texit"
-  show (ThreeAddressCode Abort Nothing Nothing Nothing)  = "\tabort"
+  show (TACC Exit Nothing Nothing Nothing)   = "\texit"
+  show (TACC Abort Nothing Nothing Nothing)  = "\tabort"
 -- Castings
   show (TACC (Cast _ toT) (Just x) (Just y) _)  = show x ++ " := " ++ toT ++ "(" ++ show y ++ ")"
 -- Operator no recognized
